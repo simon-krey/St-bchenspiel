@@ -13,10 +13,11 @@ class Button:
         self.box_size = (self.text_size[0] + self.padding * 2, self.text_size[1] + self.padding * 2)
         self.roundness = 0.2
 
-        self.pressed = True
+        self.hovered = True
+        self.hold = True
 
     def render(self, screen: pg.Surface):
-        if not self.pressed:
+        if not self.hovered:
             pg.draw.rect(screen, pg.Color(180, 200, 180), (*self.box_pos, *self.box_size))
 
         else:
@@ -25,11 +26,17 @@ class Button:
         screen.blit(self.font.render(self.text, True, pg.Color(0, 0, 0)), self.pos)
 
     def update(self, mouse_pos, mouse_pressed):
+        self.hovered = False
         if self.box_pos[0] < mouse_pos[0] < self.box_pos[0] + self.box_size[0]:
             if self.box_pos[1] < mouse_pos[1] < self.box_pos[1] + self.box_size[1]:
+                self.hovered = True
+
                 if mouse_pressed:
-                    self.pressed = True
-                    return
+                    self.hovered = False
+                    self.hold = True
+                    return True
                 
-        self.pressed = False
-        
+        if not mouse_pressed:
+            self.hold = False
+
+        return False
