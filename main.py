@@ -7,6 +7,7 @@ import random
 
 from scrpts.ui import Button
 from scrpts.utils import rendered_text
+from scrpts.game import Game
 
 SCREEN_SIZE = (1080, 720)
 BASE_PATH = os.path.abspath(os.path.dirname(__file__))
@@ -36,6 +37,9 @@ def main():
     max_count_add_btn = Button((250, 215), "+", padding=1)
 
     start_button = Button((100, 275), "Start Game")
+
+    # game
+    game: Game
 
     mouse_pressed = False
 
@@ -100,6 +104,8 @@ def main():
                 max_count = min(max(max_count, 13), 50)
 
             if start_button.update(pg.mouse.get_pos(), mouse_pressed):
+                game = Game(min_count, max_count, turn)
+
                 current_scene = "game"
 
             screen.blit(rendered_text("Settings", size=30), [100, 30])
