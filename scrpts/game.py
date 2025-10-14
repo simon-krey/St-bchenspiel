@@ -86,3 +86,5 @@ class Game:
     def _start_animation(self, count, turn):
         self.animation["on_going"] = True
         self.animation["counter"] = self.animation["duration"]
+
+test
