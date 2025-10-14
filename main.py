@@ -4,19 +4,17 @@ pg.font.init()
 
 import os
 import random
+import time
 
 from scrpts.ui import Button
 from scrpts.utils import rendered_text
 from scrpts.game import Game
-
-SCREEN_SIZE = (1080, 720)
-BASE_PATH = os.path.abspath(os.path.dirname(__file__))
+import constants as c
 
 def main():
     pg.display.set_caption("Streichholtz Spiel")
-    screen = pg.display.set_mode(SCREEN_SIZE, vsync=1)
-
-    strechholtz_image = pg.image.load(BASE_PATH + "/assets/streichholtz.png")
+    screen = pg.display.set_mode(c.SCREEN_SIZE, vsync=1)
+    clock = pg.Clock()
 
     # variables to select before the game starts
     turn = random.randint(0, 1)
@@ -43,8 +41,16 @@ def main():
 
     mouse_pressed = False
 
+    start_time = time.time()
+    end_time = time.time()
+
+    delta_time = 0
+
     running = True
     while running:
+        delta_time = end_time - start_time
+        start_time = time.time()
+
         mouse_pressed = False
 
         for event in pg.event.get():
@@ -130,9 +136,17 @@ def main():
             start_button.render(screen)
 
         if current_scene == "game":
-            pass
+            game.update(delta_time)
+
+            print(delta_time)
+
+            game.render(screen)
 
         pg.display.flip()
+
+        clock.tick(c.FPS)
+
+        end_time = time.time()
         
 if __name__ == "__main__":
     main()

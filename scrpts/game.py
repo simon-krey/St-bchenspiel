@@ -1,6 +1,8 @@
+import pygame as pg
 import random
 
-from scrpts.utils import cubic
+from scrpts.utils import cubic, rendered_text
+import constants as c
 
 stäbeLeft = 0
 
@@ -28,12 +30,18 @@ class Game:
         self.rods = random.randint(min_count, max_count)
         self.turn = starting_turn
 
+        self.streichholz_image = pg.Surface.convert_alpha(pg.image.load(c.BASE_PATH + "/assets/streichholtz.png"))
+        self.streichholz_image = pg.transform.scale(self.streichholz_image, [int(x * 0.25) for x in self.streichholz_image.get_size()])
+        self.streichholz_pos_x = int(c.SCREEN_SIZE[0] / 2 - self.streichholz_image.get_size()[0] / 2)
+
         self.animation = {
             "on_going" : False,
             "counter" : 0,
             "duration" : 1,
             "interpolated_value" : 0
         }
+
+        self.won = False
 
     def check_win(self):
         if self.rods <= 0:
@@ -68,8 +76,12 @@ class Game:
                 self.animation["on_going"] = False
                 self.animation["interpolated_value"] = 0
 
-    def render(self, screen):
-        pass
+    def render(self, screen: pg.Surface):
+        screen.blit(rendered_text(f"Rods left: {self.rods}"))
+
+        if self.animation["on_going"] or True:
+            if not self.won:
+                screen.blit(self.streichholz_image, [self.streichholz_pos_x, 100])
 
     def _start_animation(self, count, turn):
         self.animation["on_going"] = True
