@@ -21,9 +21,6 @@ def main():
     max_count = 20
     min_count = 10
 
-    # to select while in game
-    to_withdraw = 1
-
     current_scene = "menu"
     # ui elements for menu
     turn_button = Button((380, 100), "Flip Turns")
@@ -56,6 +53,18 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
+
+            if event.type == pg.KEYDOWN:
+                if current_scene == "game":
+                    if event.key == pg.K_SPACE:
+                        game.pull_one(False)
+
+                    if event.key == pg.K_RETURN:
+                        if not game.won:
+                            game.pull_one(True)
+
+                        else:
+                            current_scene = "menu"
 
             if event.type == pg.MOUSEBUTTONUP:
                 if event.button == pg.BUTTON_LEFT:
@@ -137,8 +146,6 @@ def main():
 
         if current_scene == "game":
             game.update(delta_time)
-
-            print(delta_time)
 
             game.render(screen)
 
