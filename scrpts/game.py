@@ -70,6 +70,7 @@ class Game:
         self.pc_animations_left = 0
         self.pc_pull_delay = 0.5
         self.pc_pull_counter = 0
+        self.pc_start_delay = 1
 
     def check_win(self):
         if self.rods <= 0:
@@ -77,7 +78,7 @@ class Game:
         
         return False, 0
 
-    def pc_turn(self, algorythmus="random"):
+    def pc_turn(self, algorythmus="modulo"):
         withdraw_count: int
 
         if algorythmus == "modulo":
@@ -91,8 +92,6 @@ class Game:
 
         self.pc_animations_left = withdraw_count
         self.pc_pull_counter = self.pc_pull_delay
-
-        self.rods -= withdraw_count
 
     def user_turn(self, count):
         self.rods -= count
@@ -111,18 +110,23 @@ class Game:
         for i in finished:
             self.animations.pop(i)
 
-        if self.pc_animations_left > 0:
+        if self.pc_start_delay > 0:
+            self.pc_start_delay -= delta_time
+
+        if self.pc_animations_left > 0 and self.pc_start_delay <= 0:
             self.pc_pull_counter -= delta_time
 
             if self.pc_pull_counter <= 0:
                 self.pc_pull_counter = self.pc_pull_delay
                 self.pc_animations_left -= 1
+                self.rods -= 1
                 self._start_animation()
 
                 won, turn = self.check_win()
                 if won:
                     self.winner = turn
                     self.won = True
+                    self.pc_start_delay = 1
 
                 if self.pc_animations_left == 0 and self.turn == 0:
                     self.turn = not self.turn
@@ -146,16 +150,22 @@ class Game:
 
     def pull_one(self, done_pulling):
         if not self.won and self.turn == 1:
-            if done_pulling or self.user_pulled >= 3:
+            if done_pulling or (c.AUTO_CONTINUE_AT_THREE and self.user_pulled >= 3):
                 if self.user_pulled > 0:
                     self.turn = not self.turn
                     self.user_pulled = 0
 
-            else:
+            elif self.user_pulled < 3:
                 self.user_pulled += 1
                 self.rods -= 1
                 self._start_animation()
 
-                if self.user_pulled >= 3:
+                if c.AUTO_CONTINUE_AT_THREE and self.user_pulled >= 3:
                     self.turn = not self.turn
                     self.user_pulled = 0
+
+        won, turn = self.check_win()
+        if won:
+            self.winner = turn
+            self.won = True
+            self.pc_start_delay = 1
