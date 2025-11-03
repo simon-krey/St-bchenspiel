@@ -2,7 +2,6 @@ import pygame as pg
 pg.init()
 pg.font.init()
 
-import os
 import random
 import time
 
@@ -12,7 +11,7 @@ from scrpts.game import Game
 import constants as c
 
 def main():
-    pg.display.set_caption("Streichholtz Spiel")
+    pg.display.set_caption("Streichholz Spiel")
     screen = pg.display.set_mode(c.SCREEN_SIZE, vsync=1)
     clock = pg.Clock()
 
@@ -134,7 +133,7 @@ def main():
             else:
                 screen.blit(rendered_text("The PC is starting"), [100, 130])
 
-            screen.blit(rendered_text(f"How much rods should exist: {min_count} - {max_count}"), [100, 190])
+            screen.blit(rendered_text(f"How many rods should exist: {min_count} - {max_count}"), [100, 190])
             
             min_count_sub_btn.render(screen)
             min_count_add_btn.render(screen)

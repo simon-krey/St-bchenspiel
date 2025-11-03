@@ -56,7 +56,7 @@ class Game:
         self.rods = random.randint(min_count, max_count)
         self.turn = starting_turn
 
-        self.streichholz_image = pg.Surface.convert_alpha(pg.image.load(c.BASE_PATH + "/assets/streichholtz.png"))
+        self.streichholz_image = pg.Surface.convert_alpha(pg.image.load(c.BASE_PATH + "/assets/streichholz.png"))
         self.streichholz_image = pg.transform.scale(self.streichholz_image, [int(x * 0.25) for x in self.streichholz_image.get_size()])
         self.streichholz_pos_x = int(c.SCREEN_SIZE[0] / 2 - self.streichholz_image.get_size()[0] / 2)
 
